@@ -3,13 +3,13 @@ const USERS_LIST_BD = [
         name: 'mauricio',
         email: 'mauricio@email.com',
         username: 'mauricio',
-        password: 123
+        password: 'mauricio'
     },
     {
         name: 'ana',
         email: 'ana@email.com',
         username: 'ana',
-        password: 123
+        password: 'ana'
     }
 ];
 
