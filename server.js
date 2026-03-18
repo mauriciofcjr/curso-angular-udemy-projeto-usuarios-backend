@@ -28,19 +28,48 @@ app.post('/login', (req, res) => {
     return res.json({ token: userToken });
 });
 
+app.post('/create-user', authenticateToken, (req, res) => {
+    const tokenUsername = req.username;
+    const newUser = req.body;
+
+    const { name, email, username, password } = newUser;
+
+    if (!name || !email || !username || !password) {
+        return res.status(400).json({ message: 'All fields are requered.' });
+    }
+
+    const USER_TOKEN_FOUND = USERS_LIST_BD.findIndex((user) => user.username === tokenUsername);
+
+    if (USER_TOKEN_FOUND === -1) {
+        return res.status(403).json({ message: 'User not found.' });
+    }
+
+    const USER_FOUND = USERS_LIST_BD.findIndex((user) => user.username === newUser.username);
+    const USER_ALREADY_REGISTERED = USER_FOUND !== -1;
+
+    if (USER_ALREADY_REGISTERED) {
+        return res.status(409).json({ message: 'User already registered.' });
+    }
+
+    USERS_LIST_BD.push(newUser);
+
+    return res.status(201).json({ message: 'User successfuly created.' });
+
+});
+
 app.put('/update-user', authenticateToken, (req, res) => {
     const tokenUsername = req.username;
     const newUserInfos = req.body;
 
     const { name, email, username, password } = newUserInfos;
 
-    if(!name || !email || !username || !password ){
-        return res.status(400).json({ message: 'All fields are requered.'});
+    if (!name || !email || !username || !password) {
+        return res.status(400).json({ message: 'All fields are requered.' });
     }
 
     const USER_FOUND = USERS_LIST_BD.findIndex((user) => user.username === tokenUsername);
 
-    if(USER_FOUND === -1) {
+    if (USER_FOUND === -1) {
         return res.status(403).json({ message: 'User not found.' });
     }
 
